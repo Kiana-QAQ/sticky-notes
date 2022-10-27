@@ -32,8 +32,16 @@ function createWindow () {
   if (NODE_ENV === "development") {
     mainWindow.webContents.openDevTools()
   }
-
+  ipcMain.on('min', e => mainWindow.minimize());
+  ipcMain.on('max', e => {
+    if (mainWindow.isMaximized()) {
+      mainWindow.unmaximize()
+    } else {
+      mainWindow.maximize()
+    }
+  })
 }
+ipcMain.on('close', e => mainWindow.close());
 // 这段程序将会在 Electron 结束初始化
 app.whenReady().then(() => {
   createWindow()

@@ -1,0 +1,20 @@
+.theme-#{$theme-name} {
+  background-color: $theme-bg-color;
+  color: $theme-color;
+
+  .notes-title {
+    background-color: $theme-state-bg-color;
+
+    .title-btn {
+      &:hover {
+        background-color: $theme-title-hover-color;
+      }
+    }
+
+    .close {
+      &:hover {
+        background-color: #ff5f5f;
+      }
+    }
+  }
+}
