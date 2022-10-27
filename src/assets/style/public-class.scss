@@ -1,0 +1,11 @@
+//公共样式引入
+@import "./theme/theme-white.scss";
+@import "./theme/theme-black.scss";
+@import "./public.scss";
+
+.theme-#{$theme-name} {
+  background-color: $theme-bg-color;
+  .notes-title {
+    background-color: $theme-state-bg-color;
+  }
+}
