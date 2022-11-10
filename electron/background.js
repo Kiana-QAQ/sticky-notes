@@ -13,6 +13,7 @@ function createWindow () {
     width: 360,
     height: 560,
     frame: false,  //要创建无边框窗口
+    resizable: false, //禁止窗口大小缩放
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,//是否启用Node integration

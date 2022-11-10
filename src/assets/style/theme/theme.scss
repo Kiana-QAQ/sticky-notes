@@ -17,4 +17,14 @@
       }
     }
   }
+
+  .stick-notes {
+    .notes-center {
+      .notes-text {
+        &::before {
+          background-color: $theme-state-bg-color;
+        }
+      }
+    }
+  }
 }
