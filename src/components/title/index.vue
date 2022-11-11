@@ -44,5 +44,6 @@ export default {
 .notes-title {
   display: flex;
   justify-content: flex-end;
+  user-select:none;
 }
 </style>
