@@ -14,22 +14,43 @@ export default {
       input.value = true;
     };
     let monitorInput = ref<string>("");
-    let textarea = ref()
+    let textarea = ref();
+    let textLength: number = 0; //一行的字符数
+    let changeHeight: number = 0; //换行时增加的高度
+    let rowsLength: number = 0; //行数(从零开始计数)
     watch(monitorInput, (val) => {
-      textarea.value.style.height = textarea.value.scrollHeight + 'px'
+      if (textarea.value.clientHeight != textarea.value.scrollHeight) {
+        textLength = textarea.value.textLength - 1; //获取一行的字符数
+        changeHeight =
+          textarea.value.scrollHeight - textarea.value.clientHeight; //获取换行时增加的高度
+        textarea.value.style.height = textarea.value.scrollHeight + "px"; //计算当前输入框高度
+        rowsLength++; //行数+1
+      } else if (textLength >= textarea.value.textLength) {
+        textarea.value.style.height =
+          rowsLength == 0
+            ? textarea.value.scrollHeight + "px"
+            : textarea.value.scrollHeight - changeHeight + "px"; //当行数不为0时,每次后退一行,输入框高度减去换行时增加的高度
+        textLength = rowsLength == 0 ? 0 : textLength / rowsLength; //当行数不为0时,计算换行前的字符数
+        rowsLength = rowsLength == 0 ? 0 : rowsLength - 1; //当行数不为0时,行数-1
+      }
     });
+    const shutDown = (): void => {
+      input.value = input.value ? !input.value : input.value;
+    };
     return {
       noteList,
       create,
       monitorInput,
       input,
       textarea,
+      shutDown,
     };
   },
 };
 </script>
 <template>
-  <div class="stick-notes">
+  <div class="stick-notes"
+       @click="shutDown">
     <div class="notes-center">
       <template v-for="(x,i) in noteList"
                 :key="i">
@@ -37,14 +58,15 @@ export default {
       </template>
     </div>
     <div class="notes-add">
-      <div v-if="!input"
-           class="notes-btn"
-           @click="input = true">
+      <div class="notes-btn"
+           :class="{'close': input}"
+           @click.stop="input = true">
         <img src="./image/add.svg" />
       </div>
-      <div v-else
-           class="notes-input">
+      <div class="notes-input"
+           :class="{'appear': input}">
         <textarea v-model="monitorInput"
+                  rows="1"
                   ref="textarea"
                   name="notesInput"
                   id="notesInput"
@@ -91,7 +113,9 @@ export default {
   }
   .notes-add {
     display: flex;
+    position: relative;
     .notes-btn {
+      position: absolute;
       display: flex;
       padding: 8px;
       background-color: #fff;
@@ -108,9 +132,13 @@ export default {
         }
       }
     }
+    .close {
+      display: none;
+    }
     .notes-input {
-      display: flex;
-      width: 100%;
+      width: 40px;
+      transition: 500ms;
+      overflow: hidden;
       & > textarea {
         font-size: 18px;
         line-height: 24px;
@@ -128,8 +156,18 @@ export default {
         background-color: #fff;
         background-image: none;
         border: none;
+        border-radius: 20px;
+        transition: 500ms;
+        &:focus {
+          outline: none;
+          box-shadow: 0 0 4px 1px #d9d9d9;
+        }
+      }
+    }
+    .appear {
+      width: 100%;
+      & > textarea {
         border-radius: 4px;
-        transition: border-color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
       }
     }
   }
